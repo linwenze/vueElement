@@ -1,0 +1,42 @@
+
+.el-table__header /deep/ .has-gutter /deep/ tr th{  // table  thead 背景色
+  background-color: #f5f7fa;
+}
+
+// 按钮 plain 属性重置
+.el-button.is-plain:focus {
+    background: #fff;
+    border: 1px solid #dcdfe6;
+    border-color: #dcdfe6;
+}
+.el-button--danger.is-plain:focus {
+  color: #f56c6c;
+  background: #fef0f0;
+  border-color: #fbc4c4;
+}
+.el-button--primary.is-plain:focus {
+  color: #409EFF;
+  background: #ecf5ff;
+  border-color: #b3d8ff;
+}
+.el-button--success.is-plain:focus {
+  color: #67c23a;
+  background: #f0f9eb;
+  border-color: #c2e7b0;
+}
+.el-button--info.is-plain:focus {
+  color: #909399;
+  background: #f4f4f5;
+  border-color: #d3d4d6;
+}
+.el-button--warning.is-plain:focus {
+  color: #909399;
+  background: #f4f4f5;
+  border-color: #d3d4d6;
+}
+
+// 图标设置默认色
+.fa {
+  color: #9595ad;
+}
+

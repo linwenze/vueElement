@@ -1,0 +1,161 @@
+// 后续把这个文件的图标做成iconfont，这样减少请求
+.scrm-icon{
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-repeat:no-repeat;
+  background-position:center;
+}
+.scrm-icon-16 {
+  width: 16px;
+  height: 16px;
+}
+.scrm-icon-20 {
+  width: 20px;
+  height: 20px;
+}
+.scrm-icon-30{
+  width: 30px;
+  height: 30px;
+}
+
+.scrm-icon-45 {
+  width: 45px;
+  height: 45px;
+}
+
+.scrm-icon-70{
+  width: 70px;
+  height: 70px;
+}
+
+.scrm-logo{
+  background: url('../images/icons/menu/default-logo.png');
+}
+
+.scrm-home{
+  background: url('../images/icons/menu/home.png');
+}
+
+.scrm-market {
+  background: url('../images/icons/menu/market.png');
+}
+
+.scrm-jike {
+  background: url('../images/icons/menu/jike.png');
+}
+
+.scrm-customer {
+  background: url('../images/icons/menu/customer.png');
+}
+
+.scrm-crownpin {
+  background: url('../images/icons/menu/crownpin.png');
+}
+
+.scrm-cusService {
+  background: url('../images/icons/menu/cusService.png');
+}
+
+.scrm-o2o {
+  background: url('../images/icons/menu/o2o.png');
+}
+
+.scrm-settings {
+  background: url('../images/icons/menu/settings.png');
+}
+
+.scrm-notice {
+  background: url('../images/icons/menu/notice.png');
+}
+
+.scrm-college {
+  background: url('../images/icons/menu/college.png');
+}
+
+// 销冠图片
+.scrm-classify { // 总分类
+  background: url('../images/icons/crownpin/classify.png');
+}
+.scrm-exchange { // 兑换功能
+  background: url('../images/icons/crownpin/exchange.png');
+}
+.scrm-myorder { // 我的订单
+  background: url('../images/icons/crownpin/myorder.png');
+}
+.scrm-cluemanage { // 线索管理
+  background: url('../images/icons/crownpin/cluemanage.png');
+}
+.scrm-carPrice { // 购车询价
+  background: url('../images/icons/crownpin/car-price.png');
+} 
+.scrm-tryCarTime { // 试驾预约
+  background: url('../images/icons/crownpin/car-time.png');
+}
+.scrm-creatCard { // 建卡管理
+  background: url('../images/icons/crownpin/creat-card.png');
+}
+.scrm-invite { // 邀约登记管理
+  background: url('../images/icons/crownpin/invite.png');
+}
+.scrm-potential { // 潜客管理
+  background: url('../images/icons/crownpin/potential.png');
+}
+.scrm-passengerflow { // 客流管理
+  background: url('../images/icons/crownpin/passengerflow.png');
+}
+.scrm-defeated { // 战败列表
+  background: url('../images/icons/crownpin/defeated.png');
+}
+.scrm-complaint { // 申述列表
+  background: url('../images/icons/crownpin/complaint.png');
+}
+.scrm-orderMan { // 订单管理
+  background: url('../images/icons/crownpin/ordermanage.png');
+}
+.scrm-carExchange { // 二手车置换
+  background: url('../images/icons/crownpin/oldcar-exchange.png');
+}
+.scrm-smartCall { // 智能通话
+  background: url('../images/icons/crownpin/smart-call.png');
+}
+.scrm-setting { // 可选功能
+  background: url('../images/icons/crownpin/setting.png');
+}
+.scrm-customNotice { // 客户跟进提醒
+  background: url('../images/icons/crownpin/custom-notice.png');
+}
+.scrm-customFrom { // 客户来源类型
+  background: url('../images/icons/crownpin/custom-from.png');
+}
+.scrm-potentialCustom { // 潜客自定义字段
+  background: url('../images/icons/crownpin/potential-custom.png');
+}
+.scrm-talkSkill { // 常用话术设置
+  background: url('../images/icons/crownpin/talk-skill.png');
+}
+.scrm-carProtocol { // 试驾协议书
+  background: url('../images/icons/crownpin/car-protocol.png');
+}
+
+.scrm-tryCarSet { // 试驾车辆设置
+  background: url('../images/icons/crownpin/car-set.png');
+}
+.scrm-defeatedReason { // 战败原因
+  background: url('../images/icons/crownpin/defeated-reason.png');
+}
+.scrm-customReturn { // 成交客户回访设置
+  background: url('../images/icons/crownpin/customer-return.png');
+}
+.scrm-tagSet { // 标签设置
+  background: url('../images/icons/crownpin/tag-set.png');
+}
+.scrm-baobiao { // 报表
+  background: url('../images/icons/crownpin/baobiao.png');
+}
+
+// 公共的图标
+.scrm-goback {
+  background: url('../images/icons/goback.png');
+}

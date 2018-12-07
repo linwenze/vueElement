@@ -1,0 +1,134 @@
+html, body {
+  width: 100%;
+  height: 100%;
+}
+body {
+  background-color: #E9EFF3;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,body,ul,ol,li,p,h1,h2,h3,h4,h5 {
+    padding:0;
+    margin:0;
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+}
+
+a:focus,
+a:active ,
+i:focus,
+i:active,
+span:focus,
+span:active{
+  outline: none;
+}
+
+a,
+a:focus,
+a:hover {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}
+
+.f-r {
+  float: right;
+}
+
+.f-l {
+  float: left;
+}
+
+// 超出部分...
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.block {
+  display: block;
+}
+
+.none {
+  display: none;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.opc {
+  opacity: 0;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.marg-top-20 {
+  margin-top: 20px;
+}
+
+.marg-top-35 {
+  margin-top: 35px;
+}
+
+.m-l-5 {
+  margin-left: 5px;
+}
+
+.m-r-15 {
+  margin-right: 15px;
+}
+
+.text-blue {
+  color: #1494eb;
+}
+
+.flex {
+  display: flex;
+}
+
+.reset_icon i{
+  display: inline-block;
+  padding: 0 5px;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.common-section {
+  font-size: 14px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, .05);
+  margin: 20px 30px;
+}
+
+.form__content {
+  padding: 0 30px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.clearfix::after{
+  content: ".";
+  clear: both;
+  display: block;
+  overflow: hidden;
+  font-size: 0;
+  height: 0;
+}
