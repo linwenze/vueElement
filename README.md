@@ -100,6 +100,7 @@ npm test
   全局函数：名称Fun          baseFun.js
 
   视图：名称Tpl            userTpl.html
+
 7、CSS class命名
 add-user-info
 8、JS命名骆峰法
