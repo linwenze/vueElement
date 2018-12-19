@@ -1,12 +1,13 @@
 import * as login from './login'
 import * as crownpin from './crownpin'
+import * as common from './common'
 import * as market from './market'
 // const apiObj = {
 //   login,
 //   crownpin,
 //   market
 // }
-let apiObj={login,crownpin,market};
+let apiObj={login,crownpin,common,market};
 // Object.assign(apiObj,login,crownpin,market)
 
 const install = function (Vue) {

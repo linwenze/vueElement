@@ -1,5 +1,6 @@
 <template>
   <div class="side_main" >
+    
     <div class="sidebar-wrapper">
       <side-bar></side-bar>
     </div>
@@ -18,10 +19,12 @@ import { AppMain } from "./index";
 import ScrmFooter from "./Footer";
 import SideBar from './SideBar';
 
+
 export default {
   components: {
     ScrmFooter,
-    SideBar
+    SideBar,
+
   },
   data() {
     return {

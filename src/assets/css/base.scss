@@ -15,6 +15,8 @@ html,body,ul,ol,li,p,h1,h2,h3,h4,h5 {
     margin:0;
     font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
 }
+body.el-loading-parent--hidden{overflow:auto!important}
+.el-autocomplete-suggestion li:hover{background:#409EFF!important;color:#fff}
 
 a:focus,
 a:active ,
@@ -70,14 +72,14 @@ a:hover {
   text-align: left;
 }
 
-.text-center {
+.text-center,.text-center .cell {
   text-align: center;
 }
 
 .text-right {
   text-align: right;
 }
-
+.lright{justify-content:flex-end}
 .marg-top-20 {
   margin-top: 20px;
 }
@@ -93,6 +95,16 @@ a:hover {
 .m-r-15 {
   margin-right: 15px;
 }
+.m-l-16 {
+  margin-left: 16px!important;
+}
+.m-r-20 {
+  margin-right: 20px;
+}
+.m-b-30 {
+  margin-bottom: 30px;
+}
+
 
 .text-blue {
   color: #1494eb;
@@ -148,3 +160,12 @@ a:hover {
 .el-table{color:#444;border:1px solid #ebeaef!important;border-bottom:0!important}
 .el-table td{border-bottom:1px solid #ebeaef!important}
 .el-table a{color:#1494eb}
+
+/*搜索框*/
+.search-bar{padding:32px 0;border-bottom:1px solid #eaeff3}
+.search-bar .el-date-editor,.search-bar .el-col-17 .el-input{width:85%!important}
+.search-bar .el-date-editor .el-range-separator{width:12%}
+.search-lable{color:#444;font-size:14px;padding-right:12px;text-align:right}
+.search-bar select{border:1px solid #dcdfe6;width:85%;height:32px;border-radius:6px;outline:none;}
+.shrink{color:#b0b9c2;font-size:14px}
+.shrink i{margin-right:8px}

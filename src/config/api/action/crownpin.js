@@ -4,8 +4,10 @@ import store from '../../../store/index'
 import axios from 'axios'
 
 
-//车源列表
-export function carList(params) { 
-  store.commit('openLoading')
-  return fetch.$ajax('GET', crownpin.carList, params);
+//试驾列表
+export function shijia(params,hideLoad) { 
+  if(!hideLoad){
+    store.commit('openLoading')
+  }
+  return fetch.$ajax('GET', crownpin.shijia, params);
 }

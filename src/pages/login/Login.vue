@@ -33,6 +33,7 @@
 </template>
 <script>
 import * as Http from "@/services/api/login";
+import { mapMutations, mapState } from 'vuex'
 export default {
   data() {
     return {
@@ -50,19 +51,9 @@ export default {
   },
   created() {
     this.initData();
-    var obj = {};
-Object.defineProperties(obj,{
-  test:{
-    get(){
-      
-      return {c:3}
-    }
-  }
-})
-
-console.log(obj.test.c) // 张三, 18
   },
   methods: {
+    ...mapMutations(['closeLoading','saveUser']),
     initData() {
       localStorage.removeItem('userInfo');
       if (localStorage.getItem('RememberMe')) {
@@ -73,33 +64,38 @@ console.log(obj.test.c) // 张三, 18
     },
     submitForm(formName) {
       this.loading = true;
-      // setTimeout(()=>{
-      //   this.loading = false;
-      //   this.$router.push('/crownpin');
-      // },2000)
       let { username, password } = this.loginData;
-      let params = { username: username, password: password };
-      console.log(this.$fetch)
-      let result = this.$fetch.login.toLogin(params);
-      result.then((res) => {
-       
-        this.closeLoading()
+      let params = {
+        username: username,
+        psd: password,
+        clientVersion: '',
+        mac: '',
+        verifyCode: ''
+      };
+      this.$fetch.login.loginOld(params).then((res) => {
+        let shareKey = res.shareKey;
+        this.login(shareKey)
       }).catch((err) => {
-        this.closeLoading()
+        //旧系统登录失败
         console.log(err)
+        this.login()
       })
-
-
-      // this.$refs[formName].validate((valid) => {
-      //   if(valid){
-      //     this.checkRemenberMe();
-      //     // this.loginFn();
-      //     this.$router.push('/index');
-      //   }
-      // });
+    },
+    login(shareKey) {
+      let { username, password } = this.loginData;
+      let params = { username, password, shareKey };
+      this.$fetch.login.toLogin(params).then((res) => {
+        this.closeLoading();
+         localStorage.setItem('user_info', JSON.stringify(res.data));
+         this.saveUser(res.data);//保存用户信息
+        this.$router.push('/crownpin');
+        this.loading = false;
+      }).catch((err) => {
+        this.closeLoading();
+        this.loading = false;
+      })
     },
     checkRemenberMe() {
-
       if (this.rememberme) {
         localStorage.setItem('RememberMe', JSON.stringify({
           username: this.loginData.username

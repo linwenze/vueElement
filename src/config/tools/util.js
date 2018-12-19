@@ -1,3 +1,4 @@
+import store from '@/store'
 export function getParams() {
   let url = location.search;
   let theRequest = new Object();
@@ -21,4 +22,16 @@ export function telReg(val) {
 export function IDReg(val) {
   var IDReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;  
   return IDReg.test(val);
+}
+
+
+export function getUser(){
+   let userInfo=store.getters.userInfo;
+    if(userInfo.token){
+        return
+      }else{
+        let user_info=localStorage.getItem('user_info');
+        user_info=JSON.parse(user_info);
+        store.dispatch('setUser', user_info)
+      }
 }

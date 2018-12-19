@@ -16,7 +16,7 @@ export default {
   name: "layout",
   components: {
     scrmHeader,
-    AppMain
+    AppMain,
   },
   data() {
     return {

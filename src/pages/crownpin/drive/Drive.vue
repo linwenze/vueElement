@@ -1,43 +1,160 @@
 <template>
   <div>
+    
     <div class="clearfix">
-      <el-row class="crownpin-top">
-        <el-col :span="18">
-          <div style="width: 50px;height: 50px;background: #1494eb;display: inline-block;vertical-align: middle;margin: -2px 5px 0 0;"></div>
-          <i class="scrm-icon scrm-icon-16 scrm-classify"></i>
-          <span class="top-module m-l-5">汽车销冠</span>
-        </el-col>
-        <el-col :span="6" class="text-right">
-          <router-link to="/index" class="icon">
-            <i class="scrm-icon scrm-icon-16 scrm-myorder"></i>
-            <span class="m-l-5 text-blue">使用教程</span>
-          </router-link>
-        </el-col>
-      </el-row>
+      <!--subnav位置-->
+       <SubNavView></SubNavView>
     </div>
+    <div class="top-table">
+        <TopTable @tabSearch='searchTable' :topTableData=topTableData></TopTable>
+    </div>
+    <search-bar @find="find" @clear="clear" @searchIshidden=searchIshidden>
+
+      <template slot="searchFilter">
+        <div class="searchOpen" v-if="searchIsOpen">
+          <el-row class="m-b-30">
+            <el-col :span="6">
+              <el-row type="flex" align="middle">
+                <el-col :span="7" class="search-lable">销售顾问/DCC</el-col>
+                <el-col :span="17">
+                  <select v-model="filter.advisor_id">
+                    <option v-for="option in formOption.accoutOptions" v-bind:value="option.accountId">
+                      {{ option.nickname }}
+                    </option>
+                  </select>
+                </el-col>
+              </el-row>
+            </el-col>
+            <el-col :span="6">
+              <el-row type="flex" align="middle">
+                <el-col :span="7" class="search-lable">关键字</el-col>
+                <el-col :span="17">
+                  <el-input v-model="filter.keyword" placeholder="请输入关键字" size="small"></el-input>
+                </el-col>
+              </el-row>
+            </el-col>
+            <el-col :span="6">
+              <el-row type="flex" align="middle">
+                <el-col :span="7" class="search-lable">发起预约时间</el-col>
+                <el-col :span="17">
+                  <el-date-picker size="small" v-model="filter.send" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd">
+                  </el-date-picker>
+                </el-col>
+              </el-row>
+            </el-col>
+            <el-col :span="6">
+              <el-row type="flex" align="middle">
+                <el-col :span="7" class="search-lable">试驾时间</el-col>
+                <el-col :span="17">
+                  <el-date-picker size="small" v-model="filter.drive" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd">
+                  </el-date-picker>
+                </el-col>
+              </el-row>
+            </el-col>
+          </el-row>
+          <el-row class="m-b-30">
+            <el-col :span="6">
+              <el-row type="flex" align="middle">
+                <el-col :span="7" class="search-lable">智能试驾</el-col>
+                <el-col :span="17">
+                  <select v-model="filter.type">
+                    <option v-for="option in formOption.typeOptions" v-bind:value="option.id">
+                      {{ option.title }}
+                    </option>
+                  </select>
+                </el-col>
+              </el-row>
+            </el-col>
+            <el-col :span="6">
+              <el-row type="flex" align="middle">
+                <el-col :span="7" class="search-lable">是否超时</el-col>
+                <el-col :span="17">
+                  <select v-model="filter.over_time">
+                    <option v-for="option in formOption.over_timeOptions" v-bind:value="option.id">
+                      {{ option.title }}
+                    </option>
+                  </select>
+                </el-col>
+              </el-row>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="searchClose" v-if="!searchIsOpen">
+             <ul>
+               <li v-if="filter.advisor_id !=''">{{filter.advisor_id}}</li>
+               <li v-if="filter.keyword !=''">{{filter.keyword}}</li>
+               <li v-if="filter.send !=''">{{filter.send}}</li>
+               <li v-if="filter.drive !=''">{{filter.drive}}</li>
+               <li v-if="filter.type !=''">{{filter.type}}</li>
+               <li v-if="filter.over_time !=''">{{filter.over_time}}</li>
+             </ul>
+        </div>
+        
+
+      </template>
+    </search-bar>
     <div class="mar-l-r30 bg-white">
       <div class="mar-l-r16">
-      <data-table :table="dataTable" @onHandleSelectionChange="handleSelectionChange" @handleSync="handleSync" @handleSee="handleSee">
-        <template slot-scope="props" slot="name">
-          <a class="template-username" :href="'/market/softTemplate?mobile=' + props.obj.row.name" target="_blank">{{ props.obj.row.name }}</a>
-        </template>
-         <template slot-scope="props" slot="tel">
-          <a class="template-username" :href="'/market/softTemplate?mobile2=' + props.obj.row.tel" target="_blank">{{ props.obj.row.tel }}</a>
-        </template>
-      </data-table>
+        <data-table :table="dataTable" @searchTable='searchTable' @onHandleSelectionChange="handleSelectionChange" @handleSee="handleSee">
+          <div slot="buttons">
+            <el-button type="primary" size="medium" round icon="el-icon-search" @click="exportFile()">导出</el-button>
+          </div>
+          <template slot-scope="props" slot="name">
+            <a class="template-username" :href="'/market/softTemplate?mobile=' + props.obj.row.name" target="_blank">{{ props.obj.row.name }}</a>
+          </template>
+          <template slot-scope="props" slot="tel">
+            <a class="template-username" :href="'/market/softTemplate?mobile2=' + props.obj.row.tel" target="_blank">{{ props.obj.row.tel }}</a>
+          </template>
+        </data-table>
       </div>
     </div>
   </div>
 </template>
 <script>
 import { dataTable } from "@/components/common/dataTable";
+import { searchBar } from "@/components/common/searchBar";
+import { SubNavView } from "@/components/common/subNavView"
+import TopTable from "../../layout/TopTable"
+
+import { mapMutations, mapState } from 'vuex'
 export default {
   components: {
     dataTable,
+    searchBar,
+    TopTable,
+    SubNavView
   },
   data() {
     return {
-      dataTable: {
+      formOption: {accoutOptions:[],typeOptions:[],over_timeOptions:[]},
+      filter: {
+        page: 1,
+        drive:[],
+        send:[],
+        tab: 0,
+        per_page: 10
+      },
+      value6: '',
+      dataTable: {},
+      topTableData:{},
+      searchIsOpen:true
+    }
+  },
+  created() {
+    this.initTable();
+    this.searchTable();
+    this.getAccount();
+    this.initTopTable()
+  },
+  methods: {
+    ...mapMutations(['closeLoading']),
+    exportFile() {
+      alert('导出')
+    },
+
+    initTable() {
+
+      this.dataTable = {
         tr: [{
             id: '1',
             label: '客户姓名',
@@ -82,7 +199,7 @@ export default {
             id: '10',
             label: '销售顾问',
             prop: 'advisor_name'
-          },{
+          }, {
             id: '11',
             label: '处理时长',
             prop: 'when_long'
@@ -93,721 +210,118 @@ export default {
             prop: 'statusText'
           }
         ],
-        data: [
-        {
-          "id": 124101,
-          "name": "默默",
-          "tel": "16966363216",
-          "style": "马自达CX-3 2018款 2.0L 自动豪华型",
-          "style_second": "",
-          "style_third": "",
-          "uid": 6683474,
-          "customerId": 6683474,
-          "advisor_name": "测数据",
-          "des": "呃呃呃额额的",
-          "addtime": "2018-11-28 18:05",
-          "promise_time": "2018-11-28 20:05",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "--",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
+        data: [],
+        page: {},
+        hasSelect: true, //是否有复选框
+        hasExpand: false, //是否有收缩功能
+        hasFirstPagination: true, //是否有第一条分页条
+        hasOperation: true,
+        search: {
+          show: true,
+          url: 'crownpin.shijia', //快捷搜索的方法名称
+          width: '260', //快捷搜索输入框宽度
+          placeholder: '客户名称、手机号', //快捷搜索输入框提示文字
+          displayCol: ['name', 'tel'] //弹出需要显示的列
         },
-        {
-          "id": 123775,
-          "name": "利根",
-          "tel": "15542510905",
-          "style": "马自达CX-3 2018款 2.0L 自动豪华型",
-          "style_second": "",
-          "style_third": "",
-          "uid": 3184543,
-          "customerId": 3184543,
-          "advisor_name": "董-DCC",
-          "des": "哦哦哦墨迹",
-          "addtime": "2018-11-25 10:43",
-          "promise_time": "2018-11-26 10:42",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "--",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
-        },
-        {
-          "id": 121499,
-          "name": "发酒疯减减肥",
-          "tel": "12114141254",
-          "style": "柯珞克 2018款 TSI280 旗舰版",
-          "style_second": "",
-          "style_third": "",
-          "uid": 6620045,
-          "customerId": 6620045,
-          "advisor_name": "宋海鹏",
-          "des": "放假参加",
-          "addtime": "2018-10-31 16:40",
-          "promise_time": "2018-10-31 16:45",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "--",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
-        },
-        {
-          "id": 121108,
-          "name": "透明",
-          "tel": "13033333333",
-          "style": "柯珞克 2018款 TSI280 旗舰版",
-          "style_second": "",
-          "style_third": "",
-          "uid": 6550893,
-          "customerId": 6550893,
-          "advisor_name": "胡萝卜展销二",
-          "des": "哟",
-          "addtime": "2018-10-26 15:34",
-          "promise_time": "2018-10-26 15:36",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "--",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
-        },
-        {
-          "id": 114729,
-          "name": "肖小姐",
-          "tel": "13499998888",
-          "style": "奥迪S5 2017款 S5 3.0T Cabriolet",
-          "style_second": "",
-          "style_third": "",
-          "uid": 6488729,
-          "customerId": 6488729,
-          "advisor_name": "胡萝卜展销组长",
-          "des": "",
-          "addtime": "2018-08-21 11:37",
-          "promise_time": "2018-08-22 12:37",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "--",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
-        },
-        {
-          "id": 110649,
-          "name": "返回",
-          "tel": "18316080132",
-          "style": "奥迪S5 2017款 S5 3.0T Cabriolet",
-          "style_second": "",
-          "style_third": "",
-          "uid": 5445864,
-          "customerId": 5445864,
-          "advisor_name": "测试",
-          "des": "",
-          "addtime": "2018-07-02 14:17",
-          "promise_time": "2018-07-02 15:16",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "--",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
-        },
-        {
-          "id": 108749,
-          "name": "梧桐",
-          "tel": "18680314040",
-          "style": "奥迪A6L 2018款 30周年年型 45 TFSI quattro 豪华型",
-          "style_second": "",
-          "style_third": "",
-          "uid": 5449806,
-          "customerId": 5449806,
-          "advisor_name": "大娃（安卓测试）",
-          "des": "",
-          "addtime": "2018-06-15 16:32",
-          "promise_time": "2018-06-15 16:35",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "--",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
-        },
-        {
-          "id": 106732,
-          "name": "测试",
-          "tel": "18111111111",
-          "style": "奥迪A6L 2018款 30周年年型 45 TFSI quattro 豪华型",
-          "style_second": "",
-          "style_third": "",
-          "uid": 6251956,
-          "customerId": 6251956,
-          "advisor_name": "肖俐",
-          "des": "",
-          "addtime": "2018-05-29 14:56",
-          "promise_time": "2018-05-29 14:57",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "--",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
-        },
-        {
-          "id": 106333,
-          "name": "密码",
-          "tel": "18138815331",
-          "style": "奥迪A6L 2018款 30周年年型 45 TFSI quattro 豪华型",
-          "style_second": "",
-          "style_third": "",
-          "uid": 5475390,
-          "customerId": 5475390,
-          "advisor_name": "测试",
-          "des": "大",
-          "addtime": "2018-05-24 18:01",
-          "promise_time": "2018-05-24 21:59",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "--",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
-        },
-        {
-          "id": 98101,
-          "name": "康先生",
-          "tel": "18575562802",
-          "style": "奥迪Q5 2017款 Plus 40 TFSI 豪华型",
-          "style_second": "",
-          "style_third": "",
-          "uid": 5998832,
-          "customerId": 5998832,
-          "advisor_name": "审核专用账号",
-          "des": "",
-          "addtime": "2018-03-31 14:28",
-          "promise_time": "2018-04-01 14:27",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "无意向",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
-        },
-        {
-          "id": 96380,
-          "name": "啊啊啊啊",
-          "tel": "13714563696",
-          "style": "别克GL8 2017款 25S 尊贵型",
-          "style_second": "",
-          "style_third": "",
-          "uid": 5973427,
-          "customerId": 5973427,
-          "advisor_name": "大娃（安卓测试）",
-          "des": "擦擦擦",
-          "addtime": "2018-03-23 09:45",
-          "promise_time": "2018-03-25 09:45",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "无意向",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
-        },
-        {
-          "id": 93052,
-          "name": "俊熙吧",
-          "tel": "18682088658",
-          "style": "别克GL8 2017款 25S 尊贵型",
-          "style_second": "",
-          "style_third": "",
-          "uid": 4445986,
-          "customerId": 4445986,
-          "advisor_name": "测-销售顾问",
-          "des": "",
-          "addtime": "2018-03-06 17:34",
-          "promise_time": "2018-05-06 17:34",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "无意向",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
-        },
-        {
-          "id": 90449,
-          "name": "伏案",
-          "tel": "18620306448",
-          "style": "别克GL8 2017款 25S 尊贵型",
-          "style_second": "",
-          "style_third": "",
-          "uid": 5749340,
-          "customerId": 5749340,
-          "advisor_name": "DCC1",
-          "des": "",
-          "addtime": "2018-02-23 16:43",
-          "promise_time": "2018-02-24 16:43",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "无意向",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
-        },
-        {
-          "id": 87981,
-          "name": "马达",
-          "tel": "17611058320",
-          "style": "君越 2018款 28T Avenir",
-          "style_second": "",
-          "style_third": "",
-          "uid": 5653688,
-          "customerId": 5653688,
-          "advisor_name": "肖俐",
-          "des": "",
-          "addtime": "2018-01-29 01:51",
-          "promise_time": "2018-01-29 04:51",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "无意向",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
-        },
-        {
-          "id": 87248,
-          "name": "泰国广告",
-          "tel": "15012366963",
-          "style": "凯越 2015款 1.5L 自动尊享型",
-          "style_second": "",
-          "style_third": "",
-          "uid": 5549424,
-          "customerId": 5549424,
-          "advisor_name": "李刚",
-          "des": "",
-          "addtime": "2018-01-24 11:35",
-          "promise_time": "2018-01-31 11:35",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "无意向",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
-        },
-        {
-          "id": 84851,
-          "name": "测试经理",
-          "tel": "13869955265",
-          "style": "君越 2018款 20T 豪华型",
-          "style_second": "",
-          "style_third": "",
-          "uid": 5599489,
-          "customerId": 5599489,
-          "advisor_name": "审核专用账号",
-          "des": "",
-          "addtime": "2018-01-11 21:17",
-          "promise_time": "2018-01-12 08:30",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "无意向",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
-        },
-        {
-          "id": 84631,
-          "name": "测试",
-          "tel": "13568954231",
-          "style": "天籁 2016款 2.0L XL-Upper智尚版",
-          "style_second": "",
-          "style_third": "",
-          "uid": 5596997,
-          "customerId": 5596997,
-          "advisor_name": "审核专用账号",
-          "des": "",
-          "addtime": "2018-01-10 16:18",
-          "promise_time": "2018-01-11 08:45",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "无意向",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
-        },
-        {
-          "id": 82979,
-          "name": "陈华勇",
-          "tel": "13099979392",
-          "style": "本田CR-V 2017款 240TURBO 自动两驱舒适版",
-          "style_second": "",
-          "style_third": "",
-          "uid": 5566004,
-          "customerId": 5566004,
-          "advisor_name": "李刚",
-          "des": "早点安排",
-          "addtime": "2017-12-19 11:01",
-          "promise_time": "2017-12-21 08:30",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "无意向",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
-        },
-        {
-          "id": 82886,
-          "name": "李文",
-          "tel": "18776598886",
-          "style": "逍客 2017款 2.0L CVT智享版",
-          "style_second": "",
-          "style_third": "",
-          "uid": 5564414,
-          "customerId": 5564414,
-          "advisor_name": "肖俐",
-          "des": "",
-          "addtime": "2017-12-18 00:01",
-          "promise_time": "2017-12-19 08:30",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "无意向",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
-        },
-        {
-          "id": 82524,
-          "name": "肖鑫",
-          "tel": "15618629507",
-          "style": "柯迪亚克 2018款 TSI330 7座两驱豪华科技版",
-          "style_second": "",
-          "style_third": "",
-          "uid": 5557314,
-          "customerId": 5557314,
-          "advisor_name": "肖俐",
-          "des": "",
-          "addtime": "2017-12-13 14:31",
-          "promise_time": "2017-12-14 08:30",
-          "status": 0,
-          "statusText": "待处理",
-          "prefix": "--",
-          "content": "--",
-          "satisfaction": "无意向",
-          "handle_time": "--",
-          "when_long": "--",
-          "confirm_at": "--",
-          "confirm_car": "--",
-          "drive_at": "--",
-          "drive_car": "--",
-          "reason": "--",
-          "not_arrive_at": "--",
-          "cancel_at": "--",
-          "drive_image": "",
-          "driving_licence_image": "",
-          "lincense_info": null,
-          "is_over_time": "是",
-          "follow_first": null,
-          "follow_second": null
+        operation: { // 操作功能
+          label: '操作', // 操作列的行首文字
+          width: '80', // 操作列的宽度
+          className: 'text-center', // 操作列的class名
+          data: [ // 操作列数据
+            {
+              label: '查看', // 按钮文字
+              Fun: 'handleSee', // 点击按钮后触发的父组件事件
+              size: 'mini', // 按钮大小
+              icon: '', //图标
+              type: 'primary',
+              id: '1' // 按钮循环组件的key值
+            }
+          ]
         }
-      ],
-        hasSelect:true,
-        hasExpand:false,
-        hasOperation:true,
-        operation: {             // 操作功能
-            label: '操作',                // 操作列的行首文字
-            width: '80',                // 操作列的宽度
-            className: '',               // 操作列的class名
-            data: [                      // 操作列数据
-              {
-                label: '查看',                // 按钮文字
-                Fun: 'handleSee',         // 点击按钮后触发的父组件事件
-                size: 'mini',                // 按钮大小
-                id: '1'                     // 按钮循环组件的key值
-              }
-            ]
-          }
 
       }
-    }
-  },
-  methods: {
-    handleSelectionChange(){
     },
-    handleSync(){
+    handleSelectionChange() {},
+    searchIshidden(){
+      this.searchIsOpen = !this.searchIsOpen
+    },
+    //获取菜单列表
+    getAccount() {
+      this.$fetch.common.getAccount({
+        all: 1,
+        roleId: '6,7,22',
+        unbind: '9'
+      }).then((res) => {
+        this.formOption.accoutOptions = res.data.list.data;
+        this.closeLoading(); //关闭加载中
+      }).catch((err) => {
+        this.closeLoading();
+      })
+    },
+    //搜索回调
+    find() {
+      //时间参数处理
+      this.filter.drive_start_at=this.filter.drive[0];
+      this.filter.drive_end_at=this.filter.drive[1];
+       this.filter.start_at=this.filter.send[0];
+      this.filter.end_at=this.filter.send[1];
+      this.searchTable()
+    },
+    //清除搜索条件
+    clear() {
+      this.filter = {page: 1,
+        drive:[],
+        send:[],
+        tab: 0,
+        per_page: 10};
+      this.searchTable()
+    },
+    // handleSync(){
+    // },
+    /**
+     * @param OBJECT [参数]
+     * parma.searchData OBJECT 快捷搜索返回结果
+     */
+    searchTable(parma) {
+      if (parma && parma.searchData) {
+        this.dataTable.data = [parma.searchData];
+      } else {
+        Object.assign(this.filter, parma)
+        this.$fetch.crownpin.shijia(this.filter).then((res) => {
+          this.closeLoading(); //关闭加载中
+          this.dataTable.data = res.data.list.data;//表格所需数据
+          this.dataTable.page = res.data.list.page;//表格所需数据
+          this.topTableData =res.data.tabs
+          this.formOption.typeOptions=res.data.search.type.enum;//下拉列表智能试驾列表
+          this.formOption.over_timeOptions=res.data.search.over_time.enum;//下拉列表是否超时列表
+        }).catch((err) => {
+          this.closeLoading();
+        })
+      }
+    },
+    initTopTable(){
+      this.$fetch.crownpin.shijia(this.filter).then((res) => {
+          //this.closeLoading(); //关闭加载中
+          //this.dataTable.data = res.data.list.data;//表格所需数据
+          //this.dataTable.page = res.data.list.page;//表格所需数据
+          this.topTableData =res.data.tabs
+         // this.formOption.typeOptions=res.data.search.type.enum;//下拉列表智能试驾列表
+         // this.formOption.over_timeOptions=res.data.search.over_time.enum;//下拉列表是否超时列表
+        }).catch((err) => {
+          //this.closeLoading();
+        })
     },
     /*
     @param idx Number 表下标
     row Object 当前行数据
     id String 行ID
      */
-    handleSee(idx,row,id){
+    handleSee(idx, row, id) {
       alert(idx)
     }
+  },
+  computed: {
+    ...mapState(['userInfo']),
   }
 }
 
@@ -823,5 +337,16 @@ export default {
   line-height: 50px;
   padding-right: 15px;
 }
+.searchClose{
+  padding:0 20px 20px;
+}
+.searchClose ul li{
 
+    font-size:14px;
+    border:1px solid #d3d8db;
+    list-style:none;
+    display:inline;
+    padding: 10px;
+    margin-right:15px;
+}
 </style>

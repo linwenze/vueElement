@@ -11,20 +11,25 @@ let baseUrl = '';
 let host = '';
 let routerMode = 'history';
 let imgBaseUrl = 'http://images.cangdu.org/';
+let oldHost='';//旧系统
 baseUrl = '';
 let Host=process.env.HOST || 'prod';
 switch (Host) {
   case 'test':
     baseUrl = 'https://pcapi.test-chexiu.cn';
+    oldHost='https://pcv8.test-chexiu.cn';
     break;
   case 'pro':
     baseUrl = 'https://pcapi.chexiu.cn';
+    oldHost='https://pcv8.chexiu.cn';
     break;
   case 'demo':
-  baseUrl = 'https://newpc.demo-chexiu.cn';
+  baseUrl = 'https://pcapi.demo-chexiu.cn';
+  oldHost='https://pcv8.demo-chexiu.cn';
   break;
   default:
-    baseUrl = 'https://newpc.dev-chexiu.cn';
+    baseUrl = 'https://pcapi.dev-chexiu.cn';
+    oldHost='https://pcv8.dev-chexiu.cn';
 
     break;
 }
@@ -33,5 +38,6 @@ export {
   baseUrl,
   routerMode,
   imgBaseUrl,
+  oldHost,
   host
 }

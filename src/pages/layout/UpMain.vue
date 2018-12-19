@@ -1,5 +1,6 @@
 <template>
   <div class="up_main">
+    
     <div class="up_container" :style="{'min-height': minHeight+'px'}">
       <router-view></router-view>
     </div>
@@ -15,7 +16,8 @@ import ScrmFooter from "./Footer";
 
 export default {
   components: {
-    ScrmFooter,
+    ScrmFooter
+   
   }, 
   data(){
     return{

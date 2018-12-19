@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {baseUrl} from './env'
+import {baseUrl,oldHost} from './env'
 import store from '../store/index'
 // axios.defaults.headers.common['Authorization'] = `Bearer m_b6bAU6SrLpW`
 let xhrQueue = {};
@@ -65,11 +65,22 @@ export default {
         // 'responseType': 'application/json',
       };
     }
+    
+    let myHeaders=options.headers? options.headers: headerObj
+    // let token = store().state.session;
+    // alert(token)
+    let userInfo=store.getters.userInfo;
+    if(userInfo && userInfo.token){
+        let Authorization={
+        Authorization: 'Bearer ' + userInfo.token
+      }
+      Object.assign(myHeaders,Authorization)
+    }
     // console.log(options);
     const config = Object.assign({
       url,
       method,
-      headers: options.headers? null: headerObj
+      headers: myHeaders
     },options);
     // console.log(config);
     return new Promise((resolve,reject)=>{
@@ -84,7 +95,7 @@ export default {
         } else {
           let msg=res.data.msg?res.data.msg:res.msg;
           store.dispatch('error', msg)
-          reject(res.data);
+          reject(res.data); 
         }
         queueCleaner(queueId); // 释放队列中的subscription
       }).catch(error=>{
@@ -92,11 +103,18 @@ export default {
         // console.log(error.config);
         // console.log(error.message);
         // store.dispatch('inquiry', '登录失效，重新登录？') 
-        window.location.href = "exit:true"
+        // 
+        if(error.response && error.response.data.code==401){
+          window.location.href="/login"
+        }
         reject(error);
         queueCleaner(queueId); // 释放队列中的subscription
       });
     });
+  },
+  $ajaxOld(method,url,params,options){
+    url=oldHost+url;
+    return this.$request({method,url,params,options});
   },
   $ajax(method,url,params,options){
     url=baseUrl+url;
@@ -111,6 +129,7 @@ export default {
     return this.$request({method: 'POST',url,params,options});
   },
   baseUrl,
+  oldHost,
   setHeaderAuthorization(state,token){
     state.token = token;
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;

@@ -3,6 +3,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 import { handleResponse } from './services/common/handleResponse';
+import { getUser } from './config/tools/util';
 import Element from 'element-ui'
 import component from './components/statis/index';
 import api from './config/api/action/index'
@@ -19,11 +20,24 @@ Vue.config.productionTip = true
 Vue.prototype.$handleResponse = handleResponse;
 Vue.prototype.$eventHub = Vue.prototype.$eventHub || new Vue();
 
+
+//数字转字符串过滤器
+Vue.filter("filterNuber", function(value) {   
+ return value.toString();
+});
+Vue.filter("normalTime", function(value) {   
+ return value.toString();
+});
+
 // 注册全局组件
 Object.keys(component).forEach(key => {
   var name = key.replace(/(\w)/, (v) => v.toUpperCase()); // 首字母大写
   Vue.component(`${name}`, component[key]);
 });
+router.beforeResolve((to, from, next) => { // 全局路由钩子
+  getUser();//获取用户信息
+  next()
+})
 
 /* eslint-disable no-new */
 new Vue({

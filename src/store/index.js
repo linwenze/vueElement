@@ -5,7 +5,8 @@ import actions from './action'
 import getters from './getters'
 Vue.use(Vuex)
 const state = {
-  loadingShow:false,
+  loadingShow:{},
+  userInfo:{},//用户登录
   session:2222333333
 }
 export default new Vuex.Store({
